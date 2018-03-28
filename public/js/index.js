@@ -3,11 +3,6 @@ var socket = io();
 socket.on('connect', function() {
     console.log('Connected to server');
 
-    //  socket.emit('createMessage', {
-    //      text: 'wassupppp?',
-    //      from: 'milind',
-    //  });
- 
 });
 
 socket.on('disconnect', function() {
@@ -16,18 +11,12 @@ socket.on('disconnect', function() {
 
 socket.on('newMessage', function(message) {
     console.log('New message emmitted', message);
-    var li = jQuery('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    var li = jQuery('<li></li>');   
+    var timestamp = moment(message.createdAt).format('h:mm a');
+    li.text(`${message.from} ${timestamp}: ${message.text}`);
 
     jQuery('#messages').append(li);
 });
-
-// socket.emit('createMessage',{
-//     from:'Milind',
-//     text: 'data from client'
-// }, function(data){
-//     console.log('Got it', data);
-// });
 
 var messageTextbox = jQuery('[name=message]');
 
@@ -65,15 +54,16 @@ locationButton.on('click', function(){
     }, function(){
         locationButton.removeAttr('disabled').text('Send Location');        
         alert('Unable to fetch location');
-    })
+    });
 });
 
 
 socket.on('newLocationMessage', function(message){
     var li = jQuery('<li></li>');
+    var timestamp = moment(message.createdAt).format('hh:mm a');
     var a = jQuery('<a target="_blank">My current Location</a>');
 
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${timestamp} : `);
     a.attr('href', message.url);
     li.append(a);
     jQuery('#messages').append(li);
